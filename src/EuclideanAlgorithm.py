@@ -36,10 +36,15 @@ def diff(array):
 #             hmatrix[i][j] += matrix1[i][j] * matrix2[j][i]
 
 def concat(array):
-    for mat in array:
-        matrix.concatenate(mat)
+    mat = array[0]
 
-    pass
+    for matr in array:
+        if matr == mat :
+            continue
+        else :
+            mat = matrix.concatenate(mat,matr)
+    
+    return mat
 
 def covarian(mtr):
     tmatrix = matrix.transpose(mtr)
@@ -49,4 +54,5 @@ def covarian(mtr):
 
 mean = mean(s)
 diff(s)
+concat(s)
 covar = covarian(s)
