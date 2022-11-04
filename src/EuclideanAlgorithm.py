@@ -31,7 +31,7 @@ def diff(mtr):
 #         for j in range (col):
 #             hmatrix[i][j] += matrix1[i][j] * matrix2[j][i]
 
-def covarian(matrix):
+def covarian(mtr):
     tmatrix = matrix.transpose(matrix)
     hasilMatrix = matrix.multiply(matrix,tmatrix)
     return hasilMatrix
