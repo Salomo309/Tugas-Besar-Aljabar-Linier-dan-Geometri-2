@@ -1,23 +1,29 @@
 import numpy as matrix
 
-row = 6
-col = 6
+row = 256
+col = 256
 
 s = [[0 for i in range(col)] for j in range(row)]
 
-def mean(mtr):
+def mean(array):
     sum = 0
+    meanmat = [[0 for i in range(col)] for j in range(row)]
+    
+    for i in range (0,256):
+        for j in range (0,256):
+            for matrix in array:
+                meanmat[i][j] += matrix[i][j]
+            meanmat[i][j] /= 256
 
+    return meanmat
+
+def diff(array):
     for i in range (row):
         for j in range (col):
-            sum += mtr[i][j]
+            for matrix in array:
+                matrix[i][j] -= mean(array)
 
-    return sum/col
-
-def diff(mtr):
-    for i in range (row):
-        for j in range (col):
-            mtr[i][j] -= mean(mtr)
+    return array
 
 # def transpose(matrix):
 #     for i in range (row):
@@ -32,8 +38,8 @@ def diff(mtr):
 #             hmatrix[i][j] += matrix1[i][j] * matrix2[j][i]
 
 def covarian(mtr):
-    tmatrix = matrix.transpose(matrix)
-    hasilMatrix = matrix.multiply(matrix,tmatrix)
+    tmatrix = matrix.transpose(mtr)
+    hasilMatrix = matrix.multiply(mtr,tmatrix)
     return hasilMatrix
 
 
