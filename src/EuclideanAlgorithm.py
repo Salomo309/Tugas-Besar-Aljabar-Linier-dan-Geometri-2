@@ -11,15 +11,15 @@ def mean(array):
     
     for i in range (0,256):
         for j in range (0,256):
-            for matrix in array:
-                meanmat[i][j] += matrix[i][j]
+            for mat in array:
+                meanmat[i][j] += mat[i][j]
             meanmat[i][j] /= 256
 
     return meanmat
 
 def diff(array):
-    for matrix in array:
-        matrix -= mean(array)
+    for mat in array:
+        mat -= mean(array)
 
     return array
 
@@ -36,7 +36,9 @@ def diff(array):
 #             hmatrix[i][j] += matrix1[i][j] * matrix2[j][i]
 
 def concat(array):
-    
+    for mat in array:
+        matrix.concatenate(mat)
+
     pass
 
 def covarian(mtr):
