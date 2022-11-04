@@ -18,10 +18,8 @@ def mean(array):
     return meanmat
 
 def diff(array):
-    for i in range (row):
-        for j in range (col):
-            for matrix in array:
-                matrix[i][j] -= mean(array)
+    for matrix in array:
+        matrix -= mean(array)
 
     return array
 
@@ -36,6 +34,10 @@ def diff(array):
 #     for i in range (row):
 #         for j in range (col):
 #             hmatrix[i][j] += matrix1[i][j] * matrix2[j][i]
+
+def concat(array):
+    
+    pass
 
 def covarian(mtr):
     tmatrix = matrix.transpose(mtr)
