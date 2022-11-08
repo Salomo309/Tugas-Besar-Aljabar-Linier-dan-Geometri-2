@@ -1,10 +1,11 @@
 import cv2 as cv
 import numpy as np
 import EuclideanAlgorithm as eucl
+import EigenValue as ev
 
 # testing pake 2 foto
-img1 = cv.imread(r'../test/foto_testing/Adriana Lima0_0.jpg')
-img2 = cv.imread(r'../test/foto_testing/Morgan Freeman1_3027.jpg')
+img1 = cv.imread(r'test/foto_testing/Bill Gates5_583.jpg')
+img2 = cv.imread(r'test/foto_testing/Jimmy Fallon0_2757.jpg')
 
 temp = [img1, img2]
 
@@ -16,7 +17,7 @@ for img in temp:
     width = len(img_gray[0])
 
     if (height > width):
-        crop_img = img_gray[int(height/2-width/2)                            :int(height/2+width/2), 0:width]
+        crop_img = img_gray[int(height/2-width/2):int(height/2+width/2), 0:width]
     else:
         crop_img = img_gray[0:height, int(
             width/2-height/2):int(width/2+height/2)]
@@ -65,6 +66,25 @@ print()
 cov = eucl.covarian(new_arr)
 print("matriks kovarian")
 print(cov)
+
+print("eigen value with qr decomposition")
+print(ev.eigen_value(cov))
+
+print("eigen value with qr decomposition with shift")
+eig_val = ev.eigen_value_with_shift(cov)
+print(eig_val)
+
+print("eigen value from lib numpy")
+print(np.sort(np.linalg.eigvals(cov)))
+v, w = np.linalg.eig(cov)
+print(v)
+print(w)
+
+print("eigen vector")
+# cov2 = np.array([[2, 1, 0], [1, 2, 0], [0, 0, 3]])
+# eig_val = ev.eigen_value_with_shift(cov2)
+# print(eig_val.astype(int))
+print(ev.eigen_vector(eig_val, cov))
 
 # a = [
 #     [1, 2, 3],
