@@ -6,8 +6,32 @@ import EuclideanAlgorithm as eucl
 # TODO: Hessenberg Matrix Form
 
 
+def qr(A):
+    # get shape
+    r, c = A.shape
+
+    Q = np.array(A, dtype=np.double)
+    R = np.zeros([r, c], dtype=np.double)
+
+    for k in range(c):
+        for i in range(k):
+            R[i, k] = np.transpose(Q[:, i]).dot(Q[:, k])
+            Q[:, k] = Q[:, k] - R[i, k] * Q[:, i]
+        R[k, k] = np.linalg.norm(Q[:, k])
+        Q[:, k] = Q[:, k] / R[k, k]
+
+    return -Q, -R
+
+
+# A = np.array([[1, 1, 2], [2, 3, 1], [2, 3, 1]])
+# Q1, R1 = np.linalg.qr(A)
+# Q2, R2 = schwarz_rutishauser(A)
+# print(Q1)
+# print(Q2)
+
+# RECOMMENDED
 def eigen_value_with_shift(A):
-    A_k = np.copy(A)
+    A_k = np.array(A, dtype=np.double)
     n = len(A_k)
     I = np.eye(n)
 
@@ -16,18 +40,18 @@ def eigen_value_with_shift(A):
     shift = s_k * I
 
     for i in range(100):
-        Q, R = np.linalg.qr(np.subtract(A_k, shift))
+        Q, R = qr(np.subtract(A_k, shift))
         A_k = np.add(np.dot(R, Q), shift)
     return np.sort(np.diag(A_k))
 
 
 def eigen_value(A):
-    A_k = np.copy(A)
+    A_k = np.array(A, dtype=np.double)
     n = len(A_k)
     I = np.eye(n)
 
     for i in range(100):
-        Q, R = np.linalg.qr(A_k)
+        Q, R = qr(A_k)
         A_k = np.dot(R, Q)
         I = np.dot(I, Q)
     return np.sort(np.diag(A_k))
