@@ -4,7 +4,7 @@ import EuclideanAlgorithm as eucl
 import EigenValue as ev
 
 # testing pake 2 foto
-img1 = cv.imread(r'test/foto_testing/Bill Gates5_583.jpg')
+img1 = cv.imread(r'test/foto_testing/Adriana Lima0_0.jpg')
 img2 = cv.imread(r'test/foto_testing/Jimmy Fallon0_2757.jpg')
 
 temp = [img1, img2]
@@ -23,7 +23,6 @@ for img in temp:
             width/2-height/2):int(width/2+height/2)]
 
     resized_img = cv.resize(crop_img, (5, 5))
-
     arr.append(resized_img)
     # print(resized_img)
     # print()
@@ -71,7 +70,7 @@ print("eigen value with qr decomposition")
 print(ev.eigen_value(cov))
 
 print("eigen value with qr decomposition with shift")
-eig_val = ev.eigen_value_with_shift(cov)
+eig_val = ev.eigen_value(cov)
 print(eig_val)
 
 print("eigen value from lib numpy")
