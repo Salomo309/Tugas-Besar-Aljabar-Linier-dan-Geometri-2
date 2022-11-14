@@ -6,6 +6,7 @@ root = Tk()
 root.title("GUI")
 # root.geometry("1530x780")
 root["bg"] = "#FFDDD2"
+root.attributes('-fullscreen',True)
 
 # width = root.winfo_screenwidth()
 # height = root.winfo_screenheight()
@@ -19,15 +20,15 @@ title.grid(row=0, column=0, columnspan=3)
 # line = Frame(root, width=1410, height=1,bg="black", border=100).pack()
 
 # Insert Frame
-insertFrame1 = Frame(root, width=210, height=610, bg="#FFB9B9")
-insertFrame1.grid(row=1, column=0, rowspan=4)
+insertFrame1 = Frame(root, width=310, height=610, bg="#FFB9B9")
+insertFrame1.grid(row=1, column=0, rowspan=10)
 
 
 def openFolder():
     global myFolder
     root.foldername = filedialog.askdirectory()
     foldername = root.foldername.split('/')[len(root.foldername.split('/'))-1]
-    folder = Label(root, text=foldername, font=(16)).grid(row=2, column=0)
+    folder = Label(root, text=foldername, font=(16), bg="#FFB9B9").grid(row=2, column=0)
 
 
 folderButton = Button(root, bg="white", text="Please Insert a Folder",
@@ -41,7 +42,7 @@ def openFile():
         initialdir="ALGEO02-21063", title="Select an image", filetypes=(("JPG files", "*.jpg"), ("All files", "*.*")))
     filename = root.filename.split('/')[len(root.filename.split('/'))-1]
     file = Label(root, text=filename, font=(
-        16), bg="#FFB9B9").grid(row=4, column=0)
+        16), bg="#FFB9B9").grid(row=6, column=0)
 
     img = Image.open(root.filename)
     myImage = ImageTk.PhotoImage(img)
@@ -50,27 +51,27 @@ def openFile():
     resized = img.resize((new_width, new_height), Image.ANTIALIAS)
     myImage = ImageTk.PhotoImage(resized)
 
-    insertImage = Label(image=myImage).grid(row=1, column=1, rowspan=4)
+    insertImage = Label(image=myImage).grid(row=3, column=1, rowspan=4)
 
 
 imageButton = Button(root, bg="white", text="Please Insert an Image",
                      command=openFile, justify="left", font=(30))
-imageButton.grid(row=3, column=0)
+imageButton.grid(row=5, column=0)
 
 # Test Image Frame
-insertFrame2 = Frame(root, width=510, height=610, bg="#FFB9B9")
-insertFrame2.grid(row=1, column=1, rowspan=4)
+insertFrame2 = Frame(root, width=710, height=610, bg="#FFB9B9", )
+insertFrame2.grid(row=1, column=1, rowspan=10)
 
 testImage = Label(root, text="Test Image",
                   font=("Helvetica", 20), bg="#FFB9B9")
 testImage.grid(row=1, column=1)
 
 # Closest Result Frame
-insertFrame3 = Frame(root, width=510, height=610, bg="#FFB9B9")
-insertFrame3.grid(row=1, column=2, rowspan=4)
+insertFrame3 = Frame(root, width=530, height=610, bg="#FFB9B9")
+insertFrame3.grid(row=1, column=2, rowspan=10)
 
 closestResult = Label(root, text="Closest Result",
-                      font=("Helvetica", 20), bg="#FFB9B9")
+                      font=("Helvetica", 20), bg="#FFB9B9", justify="left")
 closestResult.grid(row=1, column=2)
 
 # button_quit = Button(root, text="Exit Program", command=root.quit)
