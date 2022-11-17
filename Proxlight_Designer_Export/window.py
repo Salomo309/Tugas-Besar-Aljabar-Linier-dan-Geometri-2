@@ -1,4 +1,7 @@
 from tkinter import *
+from PIL import ImageTk, Image
+from tkinter import filedialog
+
 
 
 def btn_clicked():
@@ -9,6 +12,52 @@ window = Tk()
 
 window.geometry("1200x700")
 window.configure(bg = "#e6bdff")
+global fileChosen
+global folderChosen
+fileChosen = False
+folderChosen = False
+
+def openFolder():
+    global myFolder
+    global folderChosen
+    window.foldername = filedialog.askdirectory()
+    foldername = window.foldername.split('/')[len(window.foldername.split('/'))-1]
+    cfo = canvas.create_text(
+        368.5, 254.5,
+        text = foldername,
+        fill = "#540097",
+        font = ("Poppins-Regular", int(19.200000762939453))
+    )
+
+    folderChosen = True
+    cfolder()
+
+def openFile():
+    global myImage
+    global fileChosen
+    window.filename = filedialog.askopenfilename(
+        initialdir="ALGEO02-21063", title="Select an image", filetypes=(("JPG Files", "*.jpg"), ("PNG Files","*.png"), ("All Files", "*.*")))
+    filename = window.filename.split('/')[len(window.filename.split('/'))-1]
+    cf = canvas.create_text(
+        354.5, 401.5,
+        text = filename,
+        fill = "#540097",
+        font = ("Poppins-Regular", int(19.200000762939453))
+    )
+
+    fileChosen = True
+    cfile()
+
+def cfile():
+    global fileChosen
+    if fileChosen == True:
+        canvas.delete(cf)
+
+def cfolder():
+    global folderChosen
+    if folderChosen == True:
+        canvas.delete(cfo)
+
 canvas = Canvas(
     window,
     bg = "#e6bdff",
@@ -19,12 +68,18 @@ canvas = Canvas(
     relief = "ridge")
 canvas.place(x = 0, y = 0)
 
+cf = canvas.create_text(
+        354.5, 401.5,
+        text = "No File Chosen",
+        fill = "#540097",
+        font = ("Poppins-Regular", int(19.200000762939453)))
+
 img0 = PhotoImage(file = f"img0.png")
 b0 = Button(
     image = img0,
     borderwidth = 0,
     highlightthickness = 0,
-    command = btn_clicked,
+    command = openFolder,
     relief = "flat")
 
 b0.place(
@@ -37,7 +92,7 @@ b1 = Button(
     image = img1,
     borderwidth = 0,
     highlightthickness = 0,
-    command = btn_clicked,
+    command = openFile,
     relief = "flat")
 
 b1.place(
@@ -70,13 +125,13 @@ canvas.create_text(
     fill = "#540097",
     font = ("Poppins-Regular", int(19.200000762939453)))
 
-canvas.create_text(
-    354.5, 401.5,
-    text = "No File Chosen",
-    fill = "#540097",
-    font = ("Poppins-Regular", int(19.200000762939453)))
+# canvas.create_text(
+#     354.5, 401.5,
+#     text = "No File Chosen",
+#     fill = "#540097",
+#     font = ("Poppins-Regular", int(19.200000762939453)))
 
-canvas.create_text(
+cfo = canvas.create_text(
     368.5, 254.5,
     text = "No Folder Chosen",
     fill = "#540097",
