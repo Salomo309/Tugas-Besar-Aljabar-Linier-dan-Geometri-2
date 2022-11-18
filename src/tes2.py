@@ -13,7 +13,7 @@ import EigenValue as ev
 
 
 def extract_features(image_path, vector_size=32):
-    image = imread(image_path)
+    image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     try:
         # height = len(img_gray)
@@ -54,28 +54,28 @@ def extract_features(image_path, vector_size=32):
 
 
 def mean_mat(arr):
-    n = len(arr)
+    n = arr.shape[1]
 
-    sum_mat = np.array(arr[0])
+    sum_mat = np.array(arr[:, 0])
     for i in range(1, n):
-        sum_mat += arr[i]
+        sum_mat += arr[:, i]
 
     return sum_mat / n
 
 
 def sub_mat(arr, mean):
-    n = len(arr)
+    n = arr.shape[1]
 
     copy = np.array(arr)
     print(copy.shape)
     for i in range(n):
-        copy[i] = np.subtract(copy[i], mean)
+        copy[:, i] = np.subtract(copy[:, i], mean)
     return copy
 
 
-def covariant(concat):
+def covariant(A):
 
-    return np.matmul(concat, np.transpose(concat))
+    return np.matmul(np.transpose(A), A)
 
 
 def batch_extractor(images_path):
@@ -97,8 +97,10 @@ def batch_extractor(images_path):
 
 result = batch_extractor("test/foto_testing/")
 print(result)
-print(len(result[0]))
 
+print(len(result[0]))
+result = np.transpose(result)
+print(result)
 mean = mean_mat(result)
 # print(result)
 print("\n\nMEAN")
@@ -143,7 +145,7 @@ print(concat_sub[8])
 print(concat_sub.shape)
 
 
-f = extract_features("test/foto/Sophie Turner21_918.jpg")
+f = extract_features("test/foto_testing/Bill Gates5_583.jpg")
 print("\n\nTEST FACE")
 print(f)
 sub = np.subtract(f, mean)
@@ -154,8 +156,12 @@ print("\n\nTEST FACE EIGEN FACE")
 print(ef_t)
 
 
-for i in range(len(result)):
-    ef = ev.eigen_face(eig_vec, concat_sub[i])
+for i in range(result.shape[1]):
+    if (i == 2):
+        print('\n')
+        print(f)
+        print(result[i])
+    ef = ev.eigen_face(eig_vec, concat_sub[:, i])
     # print("\n\nEIG FACE")
     # print(ef)
     # print("\n\nSELISIH TEST FACE DAN EIGEN FACE KE-", i)
