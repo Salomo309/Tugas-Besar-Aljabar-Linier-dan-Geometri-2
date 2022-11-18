@@ -21,10 +21,25 @@ def qr(A):
     return -Q, -R
 
 
+def qr_iteration(A):
+
+    # Algorithm to find eigenValues and eigenVector matrix using simultaneous power iteration.
+
+    n, m = A.shape
+    Q = np.random.rand(n, m)  # Make a random n x k matrix
+    Q, _ = np.linalg.qr(Q)  # Use np.linalg.qr decomposition to Q
+
+    for i in range(1000):
+        Z = A.dot(Q)
+        Q, R = np.linalg.qr(Z)
+    # Do the same thing over and over until it converges
+    return np.diag(R), Q
+
+
 def eigen_value(A):
     A_k = np.array(A, dtype=np.double)
     # A_k = hessenberg(A_k, calc_q=False)
-    for i in range(10000):
+    for i in range(1000):
         Q, R = qr(A_k)
         A_k = np.dot(R, Q)
     return np.flip(np.sort(np.diag(A_k)))
@@ -35,31 +50,34 @@ def eigen_vector(A, eig, cov):
     n = cov.shape[0]
     I = np.eye(n, dtype=np.double)
     eig_vec = []
-    for i in range(len(eig) // 2):
+    eig_v = []
+    for i in range(len(eig) // 10):
         if (abs(eig[i]) < 0.0000001):
             continue
         copy = np.array(cov, dtype=np.double)
-        tes = np.subtract(copy, np.multiply(I, eig[i]))
+        tes = np.subtract(np.multiply(I, eig[i]), copy)
         # aug = np.concatenate((copy, b), axis=1)
         # aug = Matrix(aug)
         # print(aug)
+        print(null_space(tes))
         v_i = np.transpose(null_space(tes))
+        print("null")
         if (len(v_i) == 0):
             v_i = [0 for j in range(n)]
         else:
             v_i = v_i[0]
-        u_i = np.matmul(v_i, A)
+            # eig_v.append(v_i)
+        u_i = np.matmul(A, v_i)
         # print(u_i)
         eig_vec.append(u_i)
+    # print(eig_v)
+    return np.transpose(np.array(eig_vec, dtype=np.double))
 
-    return np.array(eig_vec, dtype=np.double)
 
-
-def eigen_face(v, sub_i):
+def eigen_face(eig_vec, sub):
     # print(v.shape)
     # print(sub_i.shape)
-    ef_i = np.matmul(v, sub_i)
-    return ef_i
+    return np.matmul(np.transpose(eig_vec), sub)
 
 # Tempat pembuangan kode
 
