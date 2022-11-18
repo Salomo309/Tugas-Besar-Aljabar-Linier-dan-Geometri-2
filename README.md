@@ -26,9 +26,9 @@
 
 ## Technologies Used
 
-- Tech 1 - version 1.0
-- Tech 2 - version 2.0
-- Tech 3 - version 3.0
+- OpenCV - version 4.6.0
+- PIL - version 8.3.1
+- Tkinter - version 8.6
 
 ## Features
 
