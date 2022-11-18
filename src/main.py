@@ -1,11 +1,11 @@
 import cv2 as cv
 import numpy as np
-import EuclideanAlgorithm as eucl
-import EigenValue as ev
+import utils.euclidean_algorithm as eucl
+import utils.eigen_value as ev
 
 # testing pake 2 foto
-img1 = cv.imread(r'test/foto_testing/Adriana Lima0_0.jpg')
-img2 = cv.imread(r'test/foto_testing/Jimmy Fallon0_2757.jpg')
+img1 = cv.imread(r'test/foto_testing/Chris Pratt1_723.jpg')
+img2 = cv.imread(r'test/foto_testing/Chris Pratt6_869.jpg')
 
 temp = [img1, img2]
 
@@ -17,73 +17,75 @@ for img in temp:
     width = len(img_gray[0])
 
     if (height > width):
-        crop_img = img_gray[int(height/2-width/2):int(height/2+width/2), 0:width]
+        crop_img = img_gray[int(height/2-width/2)
+                                :int(height/2+width/2), 0:width]
     else:
         crop_img = img_gray[0:height, int(
             width/2-height/2):int(width/2+height/2)]
 
     resized_img = cv.resize(crop_img, (5, 5))
     arr.append(resized_img)
-    # print(resized_img)
-    # print()
-
-    # cv.imshow('Resize image', resized_img)
-    # cv.waitKey(0)
-
-
-meanmat = eucl.mean(arr)
-
-print("matriks nilai tengah training image")
-for row in meanmat:
-    for col in row:
-        print(col, end=' ')
+    print(resized_img)
     print()
 
-print()
+    cv.imshow('displaymywindows', resized_img)
+    cv.waitKey(0)  # wait for a keyboard input
+    cv.destroyAllWindows()
 
-for mat in arr:
-    for i in range(5):
-        for j in range(5):
-            mat[i][j] -= meanmat[i][j]
 
-print("selisih training image dengan nilai tengah")
-for mat in arr:
-    print("matriks")
-    for row in mat:
-        for col in row:
-            print(col, end=' ')
-        print()
+# meanmat = eucl.mean(arr)
 
-print()
+# print("matriks nilai tengah training image")
+# for row in meanmat:
+#     for col in row:
+#         print(col, end=' ')
+#     print()
 
-new_arr = eucl.concat(arr)
-print("concat matriks selisih")
-print(new_arr)
+# print()
 
-print()
+# for mat in arr:
+#     for i in range(5):
+#         for j in range(5):
+#             mat[i][j] -= meanmat[i][j]
 
-cov = eucl.covarian(new_arr)
-print("matriks kovarian")
-print(cov)
+# print("selisih training image dengan nilai tengah")
+# for mat in arr:
+#     print("matriks")
+#     for row in mat:
+#         for col in row:
+#             print(col, end=' ')
+#         print()
 
-print("eigen value with qr decomposition")
-print(ev.eigen_value(cov))
+# print()
 
-print("eigen value with qr decomposition with shift")
-eig_val = ev.eigen_value(cov)
-print(eig_val)
+# new_arr = eucl.concat(arr)
+# print("concat matriks selisih")
+# print(new_arr)
 
-print("eigen value from lib numpy")
-print(np.sort(np.linalg.eigvals(cov)))
-v, w = np.linalg.eig(cov)
-print(v)
-print(w)
+# print()
 
-print("eigen vector")
-# cov2 = np.array([[2, 1, 0], [1, 2, 0], [0, 0, 3]])
-# eig_val = ev.eigen_value_with_shift(cov2)
-# print(eig_val.astype(int))
-print(ev.eigen_vector(eig_val, cov))
+# cov = eucl.covarian(new_arr)
+# print("matriks kovarian")
+# print(cov)
+
+# print("eigen value with qr decomposition")
+# print(ev.eigen_value(cov))
+
+# print("eigen value with qr decomposition with shift")
+# eig_val = ev.eigen_value(cov)
+# print(eig_val)
+
+# print("eigen value from lib numpy")
+# print(np.sort(np.linalg.eigvals(cov)))
+# v, w = np.linalg.eig(cov)
+# print(v)
+# print(w)
+
+# print("eigen vector")
+# # cov2 = np.array([[2, 1, 0], [1, 2, 0], [0, 0, 3]])
+# # eig_val = ev.eigen_value_with_shift(cov2)
+# # print(eig_val.astype(int))
+# print(ev.eigen_vector(eig_val, cov))
 
 # a = [
 #     [1, 2, 3],
