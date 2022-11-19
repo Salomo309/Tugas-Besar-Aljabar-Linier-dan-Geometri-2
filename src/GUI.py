@@ -6,7 +6,7 @@ root = Tk()
 root.title("GUI")
 # root.geometry("1530x780")
 root["bg"] = "#FFDDD2"
-root.attributes('-fullscreen',True)
+root.attributes('-fullscreen', True)
 
 # width = root.winfo_screenwidth()
 # height = root.winfo_screenheight()
@@ -28,7 +28,8 @@ def openFolder():
     global myFolder
     root.foldername = filedialog.askdirectory()
     foldername = root.foldername.split('/')[len(root.foldername.split('/'))-1]
-    folder = Label(root, text=foldername, font=(16), bg="#FFB9B9").grid(row=2, column=0)
+    folder = Label(root, text=foldername, font=(
+        16), bg="#FFB9B9").grid(row=2, column=0)
 
 
 folderButton = Button(root, bg="white", text="Please Insert a Folder",

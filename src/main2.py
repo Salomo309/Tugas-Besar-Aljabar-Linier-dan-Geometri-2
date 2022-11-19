@@ -50,6 +50,7 @@ def batch_extractor(images_path):
     ''' EXTRACT IMAGE BATCH
         SOURCE: https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774
     '''
+    images_path = f"../test/{images_path}"
     files = [os.path.join(images_path, p)
              for p in sorted(os.listdir(images_path))]
     print("Extracting", len(files), "Files...")
@@ -111,10 +112,10 @@ def test_batch(mean, ef, y, res_name):
         100 * count / len(result[0]), 2), "%")
 
 
-def test_image(mean, ef, y, res_name):
+def test_image(mean, ef, y, res_name, f):
     ''' TEST ONE PICTURE '''
-    f = input('FILE NAME (relative to test/foto): ')
-    ex = np.transpose(extract_features('test/foto/' + f + ".jpg"))
+    # f = input('FILE NAME (relative to test/foto): ')
+    ex = np.transpose(extract_features('../test/foto/' + f))
     sub = ex - mean
     omega = (np.transpose(ef).dot(sub))  # d x 1
     min = 999999999
@@ -133,6 +134,7 @@ def test_image(mean, ef, y, res_name):
             max_id = i
 
     print("\nRESULT:", res_name[min_id])
+    return res_name[min_id].split('\\')[1]
 
 
 def menu():
@@ -193,13 +195,13 @@ def menu():
     # print("EIGEN FACE")
     # print(y)
     # print("\n\n")
-    while (True):
-        test_batch(mean, e, y, res_name)
     # while (True):
-    #     test_image(mean, e, y, res_name)
+    #     test_batch(mean, e, y, res_name)
+    while (True):
+        test_image(mean, e, y, res_name, "tes")
 
 
-menu()
+# menu()
 
 
 # TPK: TEMPAT PEMBUANGAN KODE
