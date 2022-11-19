@@ -9,12 +9,15 @@ import utils.eigen_value as eig
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import filedialog
+from datetime import datetime
+import time
+import webcam
 
 
 window = Tk()
 
 window.geometry("1200x700")
-window.configure(bg="#e6bdff")
+window.configure(bg="#eccdff")
 global foldername
 global result, res_name, mean, e, y
 fileChosen = False
@@ -27,35 +30,58 @@ seconds = 0
 ms = 0
 
 
-def update_stopwatch():
-    global seconds
-    global ms
-    if ms < 59:
-        ms += 1
-    elif ms == 59:
-        ms = 0
-        seconds += 1
-
-    # Update Label.
-    time_string = "{:02d}:{:02d}".format(seconds, ms)
+def getTime(start):
+    stop = datetime.now().timestamp()
+    duration = round(stop-start, 2)
+    print("duration =", duration)
     canvas.itemconfig(
         time_label,
-        text=time_string
+        text=duration
     )
 
-    window.after(10, update_stopwatch)  # Call again in 10 millisecs.
+    canvas.itemconfig(
+        process,
+        text=""
+    )
+
+
+# def update_stopwatch():
+#     global seconds
+#     global ms
+#     if ms < 59:
+#         ms += 1
+#     elif ms == 59:
+#         ms = 0
+#         seconds += 1
+#     # Update Label.
+#     time_string = "{:02d}:{:02d}".format(seconds, ms)
+#     canvas.itemconfig(
+#         time_label,
+#         text=time_string
+#     )
+#     window.after(10, update_stopwatch)  # Call again in 10 millisecs.
+
+def changeProcessText():
+    global filename, foldername
+
+    if (foldername != '' and filename != ''):
+        canvas.itemconfig(
+            process,
+            text="Processing..."
+        )
+
+        startProcess()
 
 
 def startProcess():
-    global running
-
-    print('Start process...')
-    # global myImage
-    # global fileChosen
     global mean, e, y, res_name
     global filename, foldername
+
     if (foldername != '' and filename != ''):
-        update_stopwatch()
+        start = datetime.now().timestamp()
+        print('Start process...')
+
+        # update_stopwatch()
         result, res_name = main2.batch_extractor(foldername)
         print("RESULT")
         print(result.shape)
@@ -65,15 +91,6 @@ def startProcess():
         print("MEAN MATRIX")
         print(mean)
         print(mean.shape)
-        # meanFace = mean.reshape((256, 256))
-        # meanFace = np.array(meanFace, dtype=np.uint8)
-        # print(meanFace)
-        # cv.imshow('displaymywindows', meanFace)
-        # cv.waitKey(0)
-        # cv.destroyAllWindows()
-        # normalizedImg = np.zeros((255, 255))
-        # normalizedImg = cv.normalize(
-        #     eigenFace,  normalizedImg, 0, 255, cv.NORM_MINMAX)
 
         print("\n\n")
 
@@ -111,6 +128,7 @@ def startProcess():
         path = main2.test_image(mean, e, y, res_name, filename)
 
         openClosestResult(path)
+        getTime(start)
 
 
 def openFolder():
@@ -169,6 +187,36 @@ def openFile():
     # openClosestResult(path)
 
 
+def openCamera():
+    global myImage
+    global filename
+    webcam.captureWebcam()
+
+    filename = 'image_from_webcam.jpg'
+    img = Image.open(f'../test/foto/{filename}')
+    myImage = ImageTk.PhotoImage(img)
+
+    new_width = 256
+    new_height = int(new_width * myImage.height() / myImage.width())
+
+    if (new_height > 275):
+        new_height = 275
+        new_width = int(new_width * myImage.width() / myImage.height())
+
+    resized = img.resize((new_width, new_height), Image.ANTIALIAS)
+    myImage = ImageTk.PhotoImage(resized)
+
+    if (filename != ''):
+        canvas.itemconfig(
+            cf,
+            text=filename
+        )
+
+    testImage = canvas.create_image(
+        675, 360,
+        image=myImage)
+
+
 def openClosestResult(path):
     global closestRes
     global foldername
@@ -190,10 +238,16 @@ def openClosestResult(path):
         995, 360,
         image=closestRes)
 
+    if (path != ''):
+        canvas.itemconfig(
+            result,
+            text=path
+        )
+
 
 canvas = Canvas(
     window,
-    bg="#e6bdff",
+    bg="#eccdff",
     height=700,
     width=1200,
     bd=0,
@@ -201,11 +255,6 @@ canvas = Canvas(
     relief="ridge")
 canvas.place(x=0, y=0)
 
-cf = canvas.create_text(
-    354.5, 401.5,
-    text="No File Chosen",
-    fill="#540097",
-    font=("Poppins-Regular", int(16)))
 
 img0 = PhotoImage(file=f"GUI/img0.png")
 b0 = Button(
@@ -214,11 +263,11 @@ b0 = Button(
     highlightthickness=0,
     command=openFolder,
     relief="flat")
-
 b0.place(
-    x=88, y=232,
-    width=177,
-    height=45)
+    x=85, y=233,
+    width=149,
+    height=41)
+
 
 img1 = PhotoImage(file=f"GUI/img1.png")
 b1 = Button(
@@ -227,28 +276,47 @@ b1 = Button(
     highlightthickness=0,
     command=openFile,
     relief="flat")
-
 b1.place(
-    x=88, y=379,
-    width=177,
-    height=45)
+    x=85, y=428,
+    width=149,
+    height=41)
+
+
+img3 = PhotoImage(file=f"GUI/img3.png")
+b3 = Button(
+    image=img3,
+    borderwidth=0,
+    highlightthickness=0,
+    command=changeProcessText,
+    relief="flat")
+b3.place(
+    x=543, y=560,
+    width=149,
+    height=41)
+
 
 img2 = PhotoImage(file=f"GUI/img2.png")
 b2 = Button(
     image=img2,
     borderwidth=0,
     highlightthickness=0,
-    command=startProcess,
+    command=openCamera,
     relief="flat")
-
 b2.place(
-    x=548, y=544,
-    width=177,
-    height=45)
+    x=347, y=385,
+    width=106,
+    height=29)
 
-canvas.create_text(
-    115, 529.5,
+
+result = canvas.create_text(
+    115, 620.5,
     text="None",
+    fill="#540097",
+    font=("Poppins-Regular", int(16)))
+
+process = canvas.create_text(
+    770, 580,
+    text="",
     fill="#540097",
     font=("Poppins-Regular", int(16)))
 
@@ -258,8 +326,14 @@ time_label = canvas.create_text(
     fill="#540097",
     font=("Poppins-Regular", int(16)))
 
+cf = canvas.create_text(
+    160.0, 493.0,
+    text="No File Chosen",
+    fill="#540097",
+    font=("Poppins-Regular", int(16)))
+
 cfo = canvas.create_text(
-    368.5, 254.5,
+    175, 298.0,
     text="No Folder Chosen",
     fill="#540097",
     font=("Poppins-Regular", int(16)))
@@ -270,4 +344,5 @@ background = canvas.create_image(
     image=background_img)
 
 # window.resizable(False, False)
+window.title("Face Recognition")
 window.mainloop()
