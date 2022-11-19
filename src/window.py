@@ -15,8 +15,6 @@ window = Tk()
 
 window.geometry("1200x700")
 window.configure(bg="#e6bdff")
-global fileChosen
-global folderChosen
 global foldername
 global result, res_name, mean, e, y
 fileChosen = False
@@ -25,14 +23,39 @@ folderChosen = False
 foldername = ''
 filename = ''
 
+seconds = 0
+ms = 0
+
+
+def update_stopwatch():
+    global seconds
+    global ms
+    if ms < 59:
+        ms += 1
+    elif ms == 59:
+        ms = 0
+        seconds += 1
+
+    # Update Label.
+    time_string = "{:02d}:{:02d}".format(seconds, ms)
+    canvas.itemconfig(
+        time_label,
+        text=time_string
+    )
+
+    window.after(10, update_stopwatch)  # Call again in 10 millisecs.
+
 
 def startProcess():
+    global running
+
     print('Start process...')
     # global myImage
     # global fileChosen
     global mean, e, y, res_name
     global filename, foldername
     if (foldername != '' and filename != ''):
+        update_stopwatch()
         result, res_name = main2.batch_extractor(foldername)
         print("RESULT")
         print(result.shape)
@@ -119,10 +142,11 @@ def openFile():
     window.filename = filedialog.askopenfilename(
         initialdir="ALGEO02-21063", title="Select an image", filetypes=(("JPG Files", "*.jpg"), ("PNG Files", "*.png"), ("All Files", "*.*")))
     filename = window.filename.split('/')[len(window.filename.split('/'))-1]
-    canvas.itemconfig(
-        cf,
-        text=filename
-    )
+    if (filename != ''):
+        canvas.itemconfig(
+            cf,
+            text=filename
+        )
 
     # path = main2.test_image(mean, e, y, res_name, filename)
 
@@ -228,7 +252,7 @@ canvas.create_text(
     fill="#540097",
     font=("Poppins-Regular", int(16)))
 
-canvas.create_text(
+time_label = canvas.create_text(
     739.5, 627.5,
     text="00.00",
     fill="#540097",
@@ -239,16 +263,6 @@ cfo = canvas.create_text(
     text="No Folder Chosen",
     fill="#540097",
     font=("Poppins-Regular", int(16)))
-
-# placeholder1_img = PhotoImage(file=f"GUI/placeholder.jpg")
-# placeholder1 = canvas.create_image(
-#     675, 360,
-#     image=placeholder1_img)
-
-# placeholder2_img = PhotoImage(file=f"GUI/placeholder.jpg")
-# placeholder2 = canvas.create_image(
-#     995, 360,
-#     image=placeholder2_img)
 
 background_img = PhotoImage(file=f"GUI/background.png")
 background = canvas.create_image(
