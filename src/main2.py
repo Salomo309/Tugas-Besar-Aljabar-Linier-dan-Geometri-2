@@ -115,7 +115,7 @@ def test_batch(mean, ef, y, res_name):
 def test_image(mean, ef, y, res_name, f):
     ''' TEST ONE PICTURE '''
     # f = input('FILE NAME (relative to test/foto): ')
-    ex = np.transpose(extract_features('../test/foto/' + f))
+    ex = np.transpose(extract_features(f))
     sub = ex - mean
     omega = (np.transpose(ef).dot(sub))  # d x 1
     min = 999999999

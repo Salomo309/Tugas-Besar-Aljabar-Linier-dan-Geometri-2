@@ -125,7 +125,7 @@ def startProcess():
 
         y = eig.proj(e, A)
 
-        path = main2.test_image(mean, e, y, res_name, filename)
+        path = main2.test_image(mean, e, y, res_name, window.filename)
 
         openClosestResult(path)
         getTime(start)
@@ -159,6 +159,7 @@ def openFile():
     global filename
     window.filename = filedialog.askopenfilename(
         initialdir="ALGEO02-21063", title="Select an image", filetypes=(("JPG Files", "*.jpg"), ("PNG Files", "*.png"), ("All Files", "*.*")))
+
     filename = window.filename.split('/')[len(window.filename.split('/'))-1]
     if (filename != ''):
         canvas.itemconfig(
