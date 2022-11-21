@@ -15,9 +15,13 @@ def extract_features(image_path, vector_size=32):
     ''' EXTRACT IMAGE FEATURE '''
     ''' SOURCE: https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774 '''
     image = cv.imread(image_path)
-    image = ctr.resize(image)
-    try:
+    length, images = ctr.detect_crop_face(image)
+    if length == 0:
+        print("No face detected:", image_path)
+        return []
 
+    try:
+        image = images[0]
         # image = cv.resize(image, (256, 256))
         # Using KAZE, cause SIFT, ORB and other was moved to additional module
         # which is adding addtional pain during install
@@ -59,8 +63,10 @@ def batch_extractor(images_path):
     for f in files:
         print('Extracting features from image %s' % f)
         name = f.split('/')[-1].lower()
-        result.append(extract_features(f))
-        res_name.append(name)
+        extracted = extract_features(f)
+        if len(extracted) > 0:
+            result.append(extract_features(f))
+            res_name.append(name)
     # TODO: SAVE EXTRACT RESULT IN FILE
     # saving all our feature vectors in pickled file
     # with open(pickled_db_path, 'w') as fp:
