@@ -108,7 +108,11 @@ def startProcess():
 
         print("\n\n")
 
-        evals, eigh = eig.qr_iteration(C1, min(10, len(C1) // 10))
+        if len(C1) <= 50:
+            k = len(C1) // 2 + 1
+        else:
+            k = min(10, len(C1) // 10)
+        evals, eigh = eig.qr_iteration(C1, k)
         # evals = eigen_value(C1)
         # eigh = eigen_vector(A, evals, C1)
         v, w = np.linalg.eig(C1)
