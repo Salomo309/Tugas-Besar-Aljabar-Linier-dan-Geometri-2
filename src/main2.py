@@ -23,6 +23,8 @@ def extract_features(image_path, vector_size=32):
 
     try:
         image = images[0]
+        cv.imshow('crop', image)
+        cv.waitKey(0)
         # image = cv.resize(image, (256, 256))
         # Using KAZE, cause SIFT, ORB and other was moved to additional module
         # which is adding addtional pain during install
@@ -145,63 +147,15 @@ def test_image(mean, ef, y, res_name, f):
 
 
 def menu():
-    # extract_image(r"test/foto_testing/Chris Pratt1_723.jpg")
     folder = input("FOLDER NAME: ")
-    # OPTION: batch_extractor and batch_extractor
     result, res_name = batch_extractor(folder)
-    print("RESULT")
-    print(result.shape)
-    # result = result.reshape((256, 256))
-    print("\n\n")
     mean = eucl.mean_mat(result)
-    print("MEAN MATRIX")
-    print(mean)
-    print(mean.shape)
-    # meanFace = mean.reshape((256, 256))
-    # meanFace = np.array(meanFace, dtype=np.uint8)
-    # print(meanFace)
-    # cv.imshow('displaymywindows', meanFace)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
-    # normalizedImg = np.zeros((255, 255))
-    # normalizedImg = cv.normalize(
-    #     eigenFace,  normalizedImg, 0, 255, cv.NORM_MINMAX)
-
-    print("\n\n")
-
-    print("TRAINING MATRIX (2048XM)")
     A = eucl.sub_mat(result, mean)
-    print(A)
-    print(A.shape)
-
-    print("\n\n")
-
     C1 = eucl.covariant(A)
-    print("COVARIANT MXM")
-    print(C1)
-
-    print("\n\n")
-
     evals, eigh = eig.qr_iteration(C1, min(10, len(C1) // 10))
-    # evals = eigen_value(C1)
-    # eigh = eigen_vector(A, evals, C1)
-    v, w = np.linalg.eig(C1)
-    # print("OWNED LIB vs NUMPY")
-    print(v)
-    print(evals)
-    print("===========")
-    print("\n\n")
-    print(eigh[1])
-    print("============")
-    # np.set_printoptions(threshold=sys.maxsize)
-    print(w[1])
     e = eig.eigen_vector(A, eigh)
-    # print(e)
 
     y = eig.proj(e, A)
-    # print("EIGEN FACE")
-    # print(y)
-    # print("\n\n")
     # while (True):
     #     test_batch(mean, e, y, res_name)
     while (True):
@@ -209,67 +163,3 @@ def menu():
 
 
 # menu()
-
-
-# TPK: TEMPAT PEMBUANGAN KODE
-# def extract_image(image_path):
-#     image = cv.imread(image_path)
-#     image = resize(image)
-#     return image.flatten()
-
-
-# def batch_extractor_2(images_path):
-#     files = [os.path.join(images_path, p)
-#              for p in sorted(os.listdir(images_path))]
-
-#     result = []
-#     res_name = []
-#     for f in files:
-#         print('Extracting features from image %s' % f)
-#         name = f.split('/')[-1].lower()
-#         result.append(extract_image(f))
-#         res_name.append(name)
-
-#     # saving all our feature vectors in pickled file
-#     # with open(pickled_db_path, 'w') as fp:
-#     #     pickle.dump(result, fp)
-#     # print(result)
-#     return np.transpose(result), res_name  # 2048 x m
-
-
-# def eigen_value(A):
-#     A_k = np.array(A, dtype=np.double)
-#     # A_k = hessenberg(A_k, calc_q=False)
-#     for i in range(1000):
-#         Q, R = qr(A_k)
-#         A_k = np.dot(R, Q)
-#     return np.flip(np.sort(np.diag(A_k)))
-
-
-# def eigen_vector(A, eig, cov):
-
-#     n = cov.shape[0]
-#     I = np.eye(n, dtype=np.double)
-#     eig_vec = []
-#     eig_v = []
-#     for i in range(len(eig)):
-#         if (abs(eig[i]) < 0.0000001):
-#             continue
-#         copy = np.array(cov, dtype=np.double)
-#         tes = np.subtract(np.multiply(I, eig[i]), copy)
-#         # aug = np.concatenate((copy, b), axis=1)
-#         # aug = Matrix(aug)
-#         # print(aug)
-#         print(null_space(tes))
-#         v_i = np.transpose(null_space(tes))
-#         # print("null")
-#         if (len(v_i) == 0):
-#             v_i = [0 for j in range(n)]
-#         else:
-#             v_i = v_i[0]
-#             eig_v.append(v_i)
-#     #     u_i = np.matmul(A, v_i)
-#     #     # print(u_i)
-#     #     eig_vec.append(u_i)
-#     # print(eig_v)
-#     return np.transpose(np.array(eig_v, dtype=np.double))
