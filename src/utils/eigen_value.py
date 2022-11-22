@@ -1,4 +1,5 @@
 import numpy as np
+import utils.euclidean_algorithm as eucl
 
 
 def qr(A):
@@ -11,13 +12,19 @@ def qr(A):
     Q = A
     R = np.zeros((n, n))
 
+    # untuk setiap kolom vektor k dari Q
     for k in range(n):
+        # untuk setiap kolom vektor i <= k dari Q
+        # proses ortogonalisasi vektor Q[:, k]
+        # dan memperoleh vektor kolom ke-k dari R
         for i in range(k):
-            R[i, k] = np.transpose(Q[:, i]).dot(Q[:, k])
+            R[i, k] = np.dot(np.transpose(Q[:, i]), (Q[:, k]))
             Q[:, k] = Q[:, k] - (R[i, k] * Q[:, i])
-
-        R[k, k] = np.linalg.norm(Q[:, k])
-        Q[:, k] = Q[:, k] / R[k, k]
+        # elemen pada diagonal R merupakan panjang dari
+        # vektor kolom ke-k dari Q
+        R[k, k] = eucl.norm(Q[:, k])
+        # normalize vektor kolom ke-k dari Q
+        Q[:, k] = np.divide(Q[:, k], R[k, k])
 
     return Q, R
 
@@ -28,14 +35,14 @@ def qr_iteration(C1, k):
         usually k = 0.1 M because 90% of the total variance is contained in the first 5% to 10% eigenvectors
         SOURCE: https://www.researchgate.net/publication/260880521
     '''
-    n, m = C1.shape
-    Q = np.random.rand(n, k)
-    Q, _ = qr(Q)
+    n, _ = C1.shape
+    Q = np.random.rand(n, k)  # dapatkan matriks random
+    Q, _ = qr(Q)  # memperoleh matriks ortogonal Q sehingga QQ^T = I
+    print(Q)
 
     for i in range(1000):
-        Z = C1 @ Q
+        Z = np.matmul(C1, Q)
         Q, R = qr(Z)
-
     return np.diag(R), Q  # dim of R: k x k, dim of Q: n x k
 
 
