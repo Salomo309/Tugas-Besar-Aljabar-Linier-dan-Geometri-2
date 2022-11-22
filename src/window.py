@@ -194,8 +194,9 @@ def openCamera():
     global filename
     webcam.captureWebcam()
 
+    window.filename = '../test/foto/image_from_webcam.jpg'
     filename = 'image_from_webcam.jpg'
-    img = Image.open(f'../test/foto/{filename}')
+    img = Image.open(f'{window.filename}')
     myImage = ImageTk.PhotoImage(img)
 
     new_width = 256
