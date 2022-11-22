@@ -24,8 +24,8 @@ def extract_features(image_path, vector_size=32):
 
     try:
         image = images[0]
-        cv.imshow('crop', image)
-        cv.waitKey(0)
+        # cv.imshow('crop', image)
+        # cv.waitKey(0)
         # image = cv.resize(image, (256, 256))
         # Using KAZE, cause SIFT, ORB and other was moved to additional module
         # which is adding addtional pain during install
@@ -42,7 +42,7 @@ def extract_features(image_path, vector_size=32):
         dsc = dsc.flatten()
         # Making descriptor of same size
         # Descriptor vector size is 64
-        needed_size = (vector_size * 256)
+        needed_size = (vector_size * 64)
         if dsc.size < needed_size:
             # if we have less the 32 descriptors then just adding zeros at the
             # end of our feature vector
@@ -144,7 +144,6 @@ def test_image(mean, ef, y, res_name, f):
             max_id = i
 
     print("\nRESULT:", res_name[min_id])
-
     if (sys.platform == 'darwin'):
         return res_name[min_id], min
     else:
@@ -157,14 +156,16 @@ def menu():
     mean = eucl.mean_mat(result)
     A = eucl.sub_mat(result, mean)
     C1 = eucl.covariant(A)
-    evals, eigh = eig.qr_iteration(C1, min(10, len(C1) // 10))
+    evals, eigh = eig.qr_iteration(C1, min(10, len(C1) - 1))
+    v, w = np.linalg.eig(C1)
+    print(evals)
+    print(v)
+    print(eigh)
+    print(w)
     e = eig.eigen_vector(A, eigh)
 
     y = eig.proj(e, A)
-    # while (True):
-    #     test_batch(mean, e, y, res_name)
     while (True):
-        test_image(mean, e, y, res_name, "tes")
-
-
-# menu()
+        test_batch(mean, e, y, res_name)
+    # while (True):
+    #     test_image(mean, e, y, res_name, "tes")

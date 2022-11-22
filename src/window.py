@@ -1,4 +1,4 @@
-import main2
+import main
 import cv2 as cv
 import numpy as np
 import os
@@ -25,7 +25,7 @@ folderChosen = False
 
 foldername = ''
 filename = ''
-THRESHOLD = 0.5
+THRESHOLD = 0.9735
 
 seconds = 0
 ms = 0
@@ -81,57 +81,18 @@ def startProcess():
     if (foldername != '' and filename != ''):
         start = datetime.now().timestamp()
         print('Start process...')
-
-        # update_stopwatch()
-        result, res_name = main2.batch_extractor(foldername)
-        print("RESULT")
-        print(result.shape)
-        # result = result.reshape((256, 256))
-        print("\n\n")
+        result, res_name = main.batch_extractor(foldername)
         mean = eucl.mean_mat(result)
-        print("MEAN MATRIX")
-        print(mean)
-        print(mean.shape)
-
-        print("\n\n")
-
-        print("TRAINING MATRIX (2048XM)")
         A = eucl.sub_mat(result, mean)
-        print(A)
-        print(A.shape)
-
-        print("\n\n")
 
         C1 = eucl.covariant(A)
-        print("COVARIANT MXM")
-        print(C1)
 
-        print("\n\n")
-
-        if len(C1) <= 50:
-            k = len(C1) // 2 + 1
-        else:
-            k = min(10, len(C1) // 10)
+        k = min(10, len(C1) - 1)
         evals, eigh = eig.qr_iteration(C1, k)
-        # evals = eigen_value(C1)
-        # eigh = eigen_vector(A, evals, C1)
-        v, w = np.linalg.eig(C1)
-        # print("OWNED LIB vs NUMPY")
-        print(v)
-        print(evals)
-        print("===========")
-        print("\n\n")
-        print(eigh[1])
-        print("============")
-        # np.set_printoptions(threshold=sys.maxsize)
-        print(w[1])
+
         e = eig.eigen_vector(A, eigh)
-        # print(e)
-
         y = eig.proj(e, A)
-
-        path, minED = main2.test_image(mean, e, y, res_name, window.filename)
-
+        path, minED = main.test_image(mean, e, y, res_name, window.filename)
         openClosestResult(path, minED)
         getTime(start)
 
