@@ -15,7 +15,6 @@ import utils.eigen_value as eig
 def extract_features(image_path, vector_size=32):
     ''' EXTRACT IMAGE FEATURE '''
     ''' SOURCE: https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774 '''
-    print(image_path)
     image = cv.imread(image_path)
     length, images = ctr.detect_crop_face(image)
     if length == 0:
@@ -90,6 +89,9 @@ def test_batch(mean, ef, y, res_name):
     # OPTION: batch_extractor and batch_extractor_2
     result, res_name_test = batch_extractor(folder)
     count = 0
+    sum_correct = 0
+    sum_fa = 0
+    min_global = 9999999999
     for j in range(len(result[0])):
         print("\nTEST:", res_name_test[j])
         sub = result[:, j] - mean
@@ -97,6 +99,7 @@ def test_batch(mean, ef, y, res_name):
         min = 999999999
         max = -1
         min_id = -1
+
         # max_id = -1
         for i in range(y.shape[1]):
             # print("EUC DISTANCE", res_name[i])
@@ -108,18 +111,26 @@ def test_batch(mean, ef, y, res_name):
             if (ed > max):
                 max = ed
                 # max_id = i
+            if (ed < min_global and res_name_test[j] != res_name[min_id]):
+                min_global = ed
         person_test = "".join(filter(lambda x: x.isalpha(), res_name_test[j]))
         person_result = "".join(
             filter(lambda x: x.isalpha(), res_name[min_id]))
         if (person_result == person_test):
             count += 1
-        print("RESULT:", res_name[min_id])
-        print("DISTANCE MIN:", min)
-        print("DISTANCE MAX:", max)
+            print("RESULT:", res_name[min_id])
+            print("DISTANCE MIN:", min)
+            print("DISTANCE MAX:", max)
+            sum_correct += min
+        else:
+            sum_fa += min
         # TODO: CALCULATE THRESHOLD
-        print("THRESHOLD:", sqrt(max / 2))
+            print("THRESHOLD:", sqrt(max / 2))
     print("TEST CONCLUDED. ACCURACY:", round(
         100 * count / len(result[0]), 2), "%")
+    print("MEAN EUC ACC", sum_correct / count)
+    print("MEAN EUC FA", sum_fa / (len(result[0] - count)))
+    print("MIN GLOBAL", min_global)
 
 
 def test_image(mean, ef, y, res_name, f):

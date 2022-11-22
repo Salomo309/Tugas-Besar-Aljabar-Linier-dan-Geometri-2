@@ -25,7 +25,7 @@ folderChosen = False
 
 foldername = ''
 filename = ''
-THRESHOLD = 0.9735
+THRESHOLD = 0.997533
 
 seconds = 0
 ms = 0
