@@ -3,6 +3,7 @@
 import cv2 as cv
 import numpy as np
 import os
+import sys
 from math import sqrt
 import utils.euclidean_algorithm as eucl
 import utils.citra as ctr
@@ -143,7 +144,11 @@ def test_image(mean, ef, y, res_name, f):
             max_id = i
 
     print("\nRESULT:", res_name[min_id])
-    return res_name[min_id], min
+
+    if (sys.platform == 'darwin'):
+        return res_name[min_id], min
+    else:
+        return res_name[min_id].split('\\')[1], min
 
 
 def menu():
