@@ -42,9 +42,3 @@ def detect_crop_face(img):
         face_crop.append(gray_image[y:y+h, x:x+w])
 
     return len(faces), face_crop
-
-
-# img = cv.imread(r'full_test/Alexandra Daddario4_377.jpg')
-# face = detect_crop_face(img)
-# cv.imshow('face', face)
-# cv.waitKey(0)
