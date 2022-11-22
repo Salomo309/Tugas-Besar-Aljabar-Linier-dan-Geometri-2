@@ -25,6 +25,7 @@ folderChosen = False
 
 foldername = ''
 filename = ''
+THRESHOLD = 0.4
 
 seconds = 0
 ms = 0
@@ -125,9 +126,9 @@ def startProcess():
 
         y = eig.proj(e, A)
 
-        path = main2.test_image(mean, e, y, res_name, filename)
+        path, minED = main2.test_image(mean, e, y, res_name, window.filename)
 
-        openClosestResult(path)
+        openClosestResult(path, minED)
         getTime(start)
 
 
@@ -217,32 +218,43 @@ def openCamera():
         image=myImage)
 
 
-def openClosestResult(path):
+def openClosestResult(path, minED):
     global closestRes
     global foldername
+    global THRESHOLD
 
-    img = Image.open(window.foldername + f'/{path}')
-    closestRes = ImageTk.PhotoImage(img)
-
-    new_width = 256
-    new_height = int(new_width * closestRes.height() / closestRes.width())
-
-    if (new_height > 275):
-        new_height = 275
-        new_width = int(new_width * closestRes.width() / closestRes.height())
-
-    resized = img.resize((new_width, new_height), Image.ANTIALIAS)
-    closestRes = ImageTk.PhotoImage(resized)
-
-    res = canvas.create_image(
-        995, 360,
-        image=closestRes)
-
-    if (path != ''):
+    if (path != '' and minED <= THRESHOLD):
         canvas.itemconfig(
             result,
-            text=path
+            text=minED
         )
+
+        img = Image.open(window.foldername + f'/{path}')
+        closestRes = ImageTk.PhotoImage(img)
+
+        new_width = 256
+        new_height = int(new_width * closestRes.height() / closestRes.width())
+
+        if (new_height > 275):
+            new_height = 275
+            new_width = int(new_width * closestRes.width() /
+                            closestRes.height())
+
+        resized = img.resize((new_width, new_height), Image.ANTIALIAS)
+        closestRes = ImageTk.PhotoImage(resized)
+
+        res = canvas.create_image(
+            995, 360,
+            image=closestRes)
+    else:
+        canvas.itemconfig(
+            result,
+            text="None"
+        )
+
+        res = canvas.create_image(
+            995, 360,
+            image=PhotoImage(file=f"GUI/placeholder.jpg"))
 
 
 canvas = Canvas(
