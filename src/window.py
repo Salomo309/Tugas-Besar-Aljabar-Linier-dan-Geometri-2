@@ -167,8 +167,6 @@ def openFile():
             text=filename
         )
 
-    # path = main2.test_image(mean, e, y, res_name, filename)
-
     img = Image.open(window.filename)
     myImage = ImageTk.PhotoImage(img)
     new_width = 256
@@ -184,8 +182,6 @@ def openFile():
     testImage = canvas.create_image(
         675, 360,
         image=myImage)
-
-    # openClosestResult(path)
 
 
 def openCamera():
@@ -223,38 +219,36 @@ def openClosestResult(path, minED):
     global foldername
     global THRESHOLD
 
+    img = Image.open(window.foldername + f'/{path}')
+    closestRes = ImageTk.PhotoImage(img)
+
+    new_width = 256
+    new_height = int(new_width * closestRes.height() / closestRes.width())
+
+    if (new_height > 275):
+        new_height = 275
+        new_width = int(new_width * closestRes.width() /
+                        closestRes.height())
+
+    resized = img.resize((new_width, new_height), Image.ANTIALIAS)
+    closestRes = ImageTk.PhotoImage(resized)
+
     if (path != '' and minED <= THRESHOLD):
-        canvas.itemconfig(
-            result,
-            text=minED
-        )
-
-        img = Image.open(window.foldername + f'/{path}')
-        closestRes = ImageTk.PhotoImage(img)
-
-        new_width = 256
-        new_height = int(new_width * closestRes.height() / closestRes.width())
-
-        if (new_height > 275):
-            new_height = 275
-            new_width = int(new_width * closestRes.width() /
-                            closestRes.height())
-
-        resized = img.resize((new_width, new_height), Image.ANTIALIAS)
         closestRes = ImageTk.PhotoImage(resized)
-
-        res = canvas.create_image(
-            995, 360,
-            image=closestRes)
+        textResult = minED
     else:
-        canvas.itemconfig(
-            result,
-            text="None"
-        )
+        print('NO MATCH')
+        closestRes = ImageTk.PhotoImage(file=f"GUI/placeholder.jpg")
+        textResult = 'None'
 
-        res = canvas.create_image(
-            995, 360,
-            image=PhotoImage(file=f"GUI/placeholder.jpg"))
+    canvas.itemconfig(
+        result,
+        text=textResult
+    )
+    res = canvas.create_image(
+        995, 360,
+        image=closestRes
+    )
 
 
 canvas = Canvas(
@@ -321,7 +315,7 @@ b2.place(
 
 
 result = canvas.create_text(
-    115, 620.5,
+    215, 620.5,
     text="None",
     fill="#540097",
     font=("Poppins-Regular", int(16)))
