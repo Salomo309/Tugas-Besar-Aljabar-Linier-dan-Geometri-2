@@ -14,6 +14,7 @@ import utils.eigen_value as eig
 def extract_features(image_path, vector_size=32):
     ''' EXTRACT IMAGE FEATURE '''
     ''' SOURCE: https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774 '''
+    print(image_path)
     image = cv.imread(image_path)
     length, images = ctr.detect_crop_face(image)
     if length == 0:
@@ -140,7 +141,7 @@ def test_image(mean, ef, y, res_name, f):
             max_id = i
 
     print("\nRESULT:", res_name[min_id])
-    return res_name[min_id].split('\\')[1]
+    return res_name[min_id], min
 
 
 def menu():
